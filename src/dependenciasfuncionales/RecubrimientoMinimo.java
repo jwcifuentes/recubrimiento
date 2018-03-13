@@ -67,18 +67,26 @@ public class RecubrimientoMinimo {
                     if(mapCierres.get(prueba)==null){
                         cierre =verificarCierre(prueba, dependenciasLo);
                         System.out.println("cierre "+cierre);
-                        mapCierres.put(prueba, cierre.split(":")[1]);
+                        if(!cierre.replace(":", "").equals("")){
+                            mapCierres.put(prueba, cierre.split(":")[1]);
+                        }
                     }else{
                         cierre = mapCierres.get(prueba);
                     }
                     if(cierre.contains(dependencia.split("->")[1])){
                         System.out.println("El atributo "+atrb+" es extraño");
-                        retorno.add(prueba+"->"+dere);
+                        izq=izq.replace(atrb, "");
+//                        retorno.add(prueba+"->"+dere);
+                        
                         isRedundante=true;
                     }
                 }
                 if(!isRedundante){                        
                     retorno.add(dependencia);
+                }
+                izq=validarDependencia(izq);
+                if(!izq.equals("")){
+                    retorno.add(izq+"->"+dere);
                 }
             }else{
                 retorno.add(dependencia);
@@ -121,6 +129,19 @@ public class RecubrimientoMinimo {
         }
 //        System.out.println("Fin del while");
         return retorno;
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static String validarDependencia(String izq) {
+        String retorno="";
+        for(int i=0; i<izq.replace(".", ",").split(",").length;i++){
+            retorno+=izq.replace(".", ",").split(",")[i].equals("")?"":izq.replace(".", ",").split(",")[i]+".";
+        }
+        if(!retorno.equals("")){
+            retorno=retorno.substring(0, retorno.length()-1);
+        }
+        return retorno;
+        
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
