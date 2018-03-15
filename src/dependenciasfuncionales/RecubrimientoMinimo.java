@@ -50,8 +50,11 @@ public class RecubrimientoMinimo {
             String dere = dependencia.split("->")[1];
             System.out.println("izquierda: "+izq);
             if(izq.contains(".")){
+                String izquierdaFinal="";
                 boolean isRedundante=false;
                 for(int i=0; i<izq.replace(".", ",").split(",").length;i++){
+                    
+//                    System.out.println("valor de izquierda en iteracion "+i+": "+izq);
                     String atrb=izq.replace(".", ",").split(",")[i];
                     String prueba=izq.replace(atrb, "");
                     if(prueba.startsWith(".")){
@@ -75,7 +78,7 @@ public class RecubrimientoMinimo {
                     }
                     if(cierre.contains(dependencia.split("->")[1])){
                         System.out.println("El atributo "+atrb+" es extraño");
-                        izq=izq.replace(atrb, "");
+                        izquierdaFinal=izq.replace(atrb, "");
 //                        retorno.add(prueba+"->"+dere);
                         
                         isRedundante=true;
@@ -84,9 +87,27 @@ public class RecubrimientoMinimo {
                 if(!isRedundante){                        
                     retorno.add(dependencia);
                 }
-                izq=validarDependencia(izq);
-                if(!izq.equals("")){
-                    retorno.add(izq+"->"+dere);
+                izquierdaFinal=validarDependencia(izquierdaFinal);
+                if(!izquierdaFinal.equals("") && !isRedundante){
+                    retorno.add(izquierdaFinal+"->"+dere);
+                }else{
+                    System.out.println("Se volvio mierda este hijueputa!!!");
+                    for(int i=0; i<izq.replace(".", ",").split(",").length;i++){
+                        String atrb=izq.replace(".", ",").split(",")[i];
+                        String cierre="";
+                        if(mapCierres.get(atrb)==null){
+                            cierre =verificarCierre(atrb, dependenciasLo);
+                            System.out.println("cierre "+cierre);
+                            if(!cierre.replace(":", "").equals("")){
+                                mapCierres.put(atrb, cierre.split(":")[1]);
+                            }
+                        }else{
+                            cierre = mapCierres.get(atrb);
+                        }
+                        if(cierre.contains(dependencia.split("->")[1])){
+                            retorno.add(atrb+"->"+dere);
+                        }
+                    }
                 }
             }else{
                 retorno.add(dependencia);
