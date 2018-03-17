@@ -166,4 +166,43 @@ public class RecubrimientoMinimo {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public static String eliminarRedundancias(String l1){
+        
+        for(String dependencia:l1.split(",")){
+            String evaluacion=l1.replace(dependencia, "");
+            if(evaluacion.startsWith(",")){
+                evaluacion=evaluacion.substring(1, evaluacion.length());
+            }
+            if(evaluacion.contains(",,")){
+                evaluacion=evaluacion.replace(",,", ",");
+            }
+            if(evaluacion.endsWith(",")){
+                evaluacion=evaluacion.substring(0, evaluacion.length()-1);
+            }
+            String cierre=verificarCierre(dependencia.split("->")[0], evaluacion.split(","));
+            if(cierre.split(":")[1].contains(dependencia.split("->")[1])){
+                System.out.println("la dependencia "+dependencia+" es redundante");
+                l1=evaluacion;
+            }
+        }
+        return l1;
+    }
+    
+    public static String hallarLLaveCandidata(ArrayList<String> atributos, String l2){
+        String retorno="";
+        for(String atributo: atributos){
+            if(l2.contains(atributo)){
+//                atributos.remove(atributo);
+                System.out.println("Eliminado por repetido... "+atributo);
+            }else{
+                retorno+=atributo+",";
+            }
+        }
+        if(!retorno.equals("")){
+            return retorno.substring(0, retorno.length()-1);
+        }else{
+            return retorno;
+        }
+    }
+    
 }

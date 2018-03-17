@@ -49,7 +49,17 @@ public class DependenciasFuncionales {
         for(String dep:l1){
             valorl1+=dep+",";
         }
-        System.out.println("Valor de l1 "+valorl1.substring(0, valorl1.length()-1));
+        valorl1=valorl1.substring(0, valorl1.length()-1);
+        System.out.println("Valor de l1: "+valorl1);
+        String l2 = RecubrimientoMinimo.eliminarRedundancias(valorl1);
+        System.out.println("Valor de l2: "+l2);
+        String w = "";
+        for(String relacion:l2.split(",")){
+            w+=relacion.split("->")[1]+",";
+        }
+        w=w.substring(0, w.length()-1);
+        String llaveCandidata=RecubrimientoMinimo.hallarLLaveCandidata(atributos, w);
+        System.out.println("Llave candidata: "+llaveCandidata);
 //        leerOpciones(atributos);
 //        leerOpciones(relaciones);
     }
