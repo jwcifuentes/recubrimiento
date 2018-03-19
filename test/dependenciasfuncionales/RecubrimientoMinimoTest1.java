@@ -46,21 +46,21 @@ public class RecubrimientoMinimoTest1 {
         System.out.println("descomponer");
         ArrayList<String> dependencias = new ArrayList<String>();
         dependencias.add("A->B");
-        dependencias.add("B->CD");
-        dependencias.add("A->E");
-        dependencias.add("EF->G");
+        dependencias.add("A.B->E");
+        dependencias.add("A.D->C");
+        dependencias.add("B.C->E");
         dependencias.add("F->H");
         dependencias.add("A->I");
         dependencias.add("A->J");
-        dependencias.add("FG->H");
-        dependencias.add("EF->H");
-        dependencias.add("AF->G");
-        dependencias.add("AF->H");
-        dependencias.add("GF->H");        
-        dependencias.add("EG->F");
-        dependencias.add("AG->F");
-        dependencias.add("CDE->J");
-        dependencias.add("DEF->I");
+        dependencias.add("F.G->H");
+        dependencias.add("E.F->H");
+        dependencias.add("A.F->G");
+        dependencias.add("A.F->H");
+        dependencias.add("G.F->H");        
+        dependencias.add("E.G->F");
+        dependencias.add("A.G->F");
+        dependencias.add("C.D.E->J");
+        dependencias.add("D.E.F->I");
         ArrayList<String> expResult = new ArrayList<String>();
         expResult.add("A->B");
         expResult.add("B->C");
@@ -69,14 +69,14 @@ public class RecubrimientoMinimoTest1 {
         expResult.add("F->H");
         expResult.add("A->I");
         expResult.add("A->J");
-        expResult.add("FG->H");
-        expResult.add("EF->H");
-        expResult.add("AF->G");
-        expResult.add("AF->H");
-        expResult.add("EG->F");
-        expResult.add("AG->F");
-        expResult.add("CDE->J");
-        expResult.add("DEF->I");
+        expResult.add("F.G->H");
+        expResult.add("E.F->H");
+        expResult.add("A.F->G");
+        expResult.add("A.F->H");
+        expResult.add("E.G->F");
+        expResult.add("A.G->F");
+        expResult.add("C.D.E->J");
+        expResult.add("D.E.F->I");
         ArrayList<String> result = RecubrimientoMinimo.descomponer(dependencias);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
@@ -89,7 +89,7 @@ public class RecubrimientoMinimoTest1 {
     @Test
     public void testEliminarExtranios() {
         System.out.println("eliminarExtranios");
-        String[] dependenciasLo = {"A->B","B->C","B->D","A->E","EF->G","F->H","A->I","A->J","FG->H","AF->G","EF->H","EG->F","AG->F","CDE->J","DEF->I"};
+        String[] dependenciasLo = {"A->B","B->C","B->D","A->E","E.F->G","F->H","A->I","A->J","F.G->H","A.F->G","E.F->H","E.G->F","A.G->F","C.D.E->J","D.E.F->I"};
         ArrayList<String> expResult = new  ArrayList<String>();
         expResult.add("A->B");
         expResult.add("B->C");
@@ -98,12 +98,12 @@ public class RecubrimientoMinimoTest1 {
         expResult.add("F->H");
         expResult.add("A->I");
         expResult.add("A->J");
-        expResult.add("EF->G");
-        expResult.add("AF->G");
-        expResult.add("EG->F");
-        expResult.add("AG->F");
-        expResult.add("CDE->J");
-        expResult.add("DEF->I");
+        expResult.add("E.F->G");
+        expResult.add("A.F->G");
+        expResult.add("E.G->F");
+        expResult.add("A.G->F");
+        expResult.add("C.D.E->J");
+        expResult.add("D.E.F->I");
         ArrayList<String> result = RecubrimientoMinimo.eliminarExtranios(dependenciasLo);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
@@ -116,8 +116,8 @@ public class RecubrimientoMinimoTest1 {
     @Test
     public void testEliminarRedundancias() {
         System.out.println("eliminarRedundancias");
-        String l1 = "A->B,B->C,B->D,A->E,F->H,A->I,A->J,EF->G,AF->G,EG->F,AG->F,CDE->J,DEF->I";
-        String expResult = "A->B,B->C,B->D,A->E,F->H,A->I,A->J,EF->G,E->F,CDE->J,DEF->I";
+        String l1 = "A->B,B->C,B->D,A->E,F->H,A->I,A->J,E.F->G,A.F->G,E.G->F,A.G->F,C.D.E->J,D.E.F->I";
+        String expResult = "A->B,B->C,B->D,A->E,F->H,A->I,A->J,E.F->G,E->F,C.D.E->J,D.E.F->I";
         String result = RecubrimientoMinimo.eliminarRedundancias(l1);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
@@ -141,7 +141,7 @@ public class RecubrimientoMinimoTest1 {
         atributos.add("H");
         atributos.add("I");
         atributos.add("J");
-        String l2 = "A->B,B->C,B->D,A->E,F->H,A->I,A->J,EF->G,E->F,CDE->J,DEF->I";
+        String l2 = "A->B,B->C,B->D,A->E,F->H,A->I,A->J,E.F->G,E->F,C.D.E->J,D.E.F->I";
         String expResult = "A";
         String result = RecubrimientoMinimo.hallarLLaveCandidata(atributos, l2);
         assertEquals(expResult, result);

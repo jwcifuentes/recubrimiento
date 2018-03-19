@@ -153,9 +153,12 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="RELACIONES"/>
+            <Property name="text" type="java.lang.String" value="DEPENDENCIAS"/>
             <Property name="autoscrolls" type="boolean" value="true"/>
           </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="DEPENDENCIAS"/>
+          </AccessibilityProperties>
         </Component>
         <Component class="javax.swing.JTextField" name="filename">
         </Component>
@@ -187,7 +190,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCargaActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="btnCarga.addActionListener(new ActionListener() {&#xa;    @Override&#xa;    public void actionPerformed(ActionEvent e) {&#xa;        if(fichero==null){&#xa;            JOptionPane.showMessageDialog(null, &quot;EL ARCHIVO ES NULO, NO ES POSIBLE EJECUTAR LA ACCI&#xd3;N SOLICITADA&quot;, &quot;ERROR DE CARGA&quot;, JOptionPane.PLAIN_MESSAGE);&#xa;        }else{&#xa;            Map&lt;String, String&gt; mapDatos=DependenciasFuncionales.leertxt(fichero);&#xa;            ArrayList&lt;String&gt; atributos = DependenciasFuncionales.obtenerElementosMap(mapDatos, &quot;T&quot;);&#xa;            ArrayList&lt;String&gt; relaciones = DependenciasFuncionales.obtenerElementosMap(mapDatos, &quot;L&quot;);&#xa;            crearDependenciasRelaciones(atributos,relaciones);&#xa;            cargaRealizada=true;&#xa;        }&#xa;    }&#xa;});"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="btnCarga.addActionListener(new ActionListener() {&#xa;    @Override&#xa;    public void actionPerformed(ActionEvent e) {&#xa;        if(fichero==null){&#xa;            JOptionPane.showMessageDialog(null, &quot;EL ARCHIVO ES NULO, NO ES POSIBLE EJECUTAR LA ACCI&#xd3;N SOLICITADA&quot;, &quot;ERROR DE CARGA&quot;, JOptionPane.PLAIN_MESSAGE);&#xa;        }else{&#xa;            &#xa;            Map&lt;String, String&gt; mapDatos=DependenciasFuncionales.leertxt(fichero);&#xa;            ArrayList&lt;String&gt; atributos = DependenciasFuncionales.obtenerElementosMap(mapDatos, &quot;T&quot;);&#xa;            ArrayList&lt;String&gt; relaciones = DependenciasFuncionales.obtenerElementosMap(mapDatos, &quot;L&quot;);&#xa;            if(validarIntegridad(atributos,relaciones)){&#xa;                crearDependenciasRelaciones(atributos,relaciones);&#xa;                cargaRealizada=true;&#xa;            }&#xa;            &#xa;        }&#xa;    }&#xa;});"/>
           </AuxValues>
         </Component>
       </SubComponents>
@@ -327,24 +330,25 @@
                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="textoL0" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="textoLlaveCand" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="textoL1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="textoL1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                      <Component id="textoL2" min="-2" max="-2" attributes="0"/>
+                      <Component id="textoL2" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="34" max="32767" attributes="0"/>
+                  <EmptySpace pref="24" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

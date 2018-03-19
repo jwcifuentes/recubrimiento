@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
 import javax.swing.JPanel;
 
 /**
@@ -75,7 +76,7 @@ public class FrameDependencias extends javax.swing.JFrame {
         jLabel1.setAutoscrolls(true);
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("RELACIONES");
+        jLabel2.setText("DEPENDENCIAS");
         jLabel2.setAutoscrolls(true);
 
         botonCargar.setText("BUSCAR");
@@ -103,11 +104,15 @@ public class FrameDependencias extends javax.swing.JFrame {
                 if(fichero==null){
                     JOptionPane.showMessageDialog(null, "EL ARCHIVO ES NULO, NO ES POSIBLE EJECUTAR LA ACCIÓN SOLICITADA", "ERROR DE CARGA", JOptionPane.PLAIN_MESSAGE);
                 }else{
+
                     Map<String, String> mapDatos=DependenciasFuncionales.leertxt(fichero);
                     ArrayList<String> atributos = DependenciasFuncionales.obtenerElementosMap(mapDatos, "T");
                     ArrayList<String> relaciones = DependenciasFuncionales.obtenerElementosMap(mapDatos, "L");
-                    crearDependenciasRelaciones(atributos,relaciones);
-                    cargaRealizada=true;
+                    if(validarIntegridad(atributos,relaciones)){
+                        crearDependenciasRelaciones(atributos,relaciones);
+                        cargaRealizada=true;
+                    }
+
                 }
             }
         });
@@ -155,6 +160,8 @@ public class FrameDependencias extends javax.swing.JFrame {
                 .addComponent(filename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+
+        jLabel2.getAccessibleContext().setAccessibleName("DEPENDENCIAS");
 
         panelCabecera.setForeground(new java.awt.Color(255, 255, 255));
         panelCabecera.setLayout(new java.awt.GridLayout(0, 9));
@@ -253,20 +260,20 @@ public class FrameDependencias extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(textoL0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel9)
-                        .addComponent(textoLlaveCand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(textoL1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(textoLlaveCand, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(textoL1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(textoL2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jMenu1.setText("File");
@@ -421,7 +428,17 @@ public class FrameDependencias extends javax.swing.JFrame {
                 paneAtributos.add(jtxxFld);
             }
             if(i<relaciones.size()){
+                final String textoBoton = relaciones.get(i);
                 btnRel.setText(relaciones.get(i));
+                btnRel.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+//                        JOptionPane.showMessageDialog(null, "RELACIÓN DE EVALUACIÓN "+textoBoton, "MENSAJE DE EVALUACIÓN", JOptionPane.PLAIN_MESSAGE);
+                        String[] options={"ELIMINAR","CANCELAR"};
+                        int rt = JOptionPane.showOptionDialog(null, "DESEA ELIMINAR LA RELACION "+textoBoton, "CONFIRMACION", YES_NO_OPTION, HEIGHT, null, options, NORMAL);
+                        System.out.println("valor rt "+rt);
+                    }
+                });
                 paneAtributos.add(btnRel);
             }else{
                 jtxxFld = new javax.swing.JLabel();
@@ -472,6 +489,30 @@ public class FrameDependencias extends javax.swing.JFrame {
 //                ,panelRelaciones
         
     }
+    
+    private boolean validarIntegridad(ArrayList<String> atributos,ArrayList<String> relaciones){
+        String linicial="";
+        for(String atrb:atributos){
+            linicial+=atrb+",";
+        }
+        for(String relacion: relaciones){
+            System.out.println("relacion: "+relacion);
+            String implicado = relacion.split("->")[0];
+            String implicante = relacion.split("->")[1];
+            boolean existe= verificarElemento(linicial,implicado);
+            if(existe){
+                JOptionPane.showMessageDialog(null, "Y COMO DE DONDE PUTAS ME SACO ATRIBUTOS Q NO EXISTEN...", "ERROR DE CARGA", JOptionPane.PLAIN_MESSAGE);
+                return false;
+            }
+            existe= verificarElemento(linicial,implicante);
+            if(existe){
+                JOptionPane.showMessageDialog(null, "Y COMO DE DONDE PUTAS ME SACO ATRIBUTOS Q NO EXISTEN...", "ERROR DE CARGA", JOptionPane.PLAIN_MESSAGE);
+                return false;
+            }
+            
+        }
+        return true;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem CrearRelaciones;
@@ -501,4 +542,23 @@ public class FrameDependencias extends javax.swing.JFrame {
     private javax.swing.JTextField textoL2;
     private javax.swing.JTextField textoLlaveCand;
     // End of variables declaration//GEN-END:variables
+
+    private boolean verificarElemento(String atributos, String elemento) {
+        
+        if(elemento.contains(".")){
+            String[] arreglo = elemento.replace(".", ",").split(",");
+            for(String unit:arreglo){
+                System.out.println("Elemento de entrada: "+unit);
+                if(!atributos.contains(unit)){
+                    return true;
+                }
+            }
+        }else{
+           if(!atributos.contains(elemento)){
+                return true;
+            } 
+        }
+        return false;
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
