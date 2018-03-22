@@ -205,4 +205,19 @@ public class RecubrimientoMinimo {
         }
     }
     
+    public static String calcular3FN(ArrayList<String> atributos, String l2){
+        for(String dependencia:l2.split(",")){
+            String evaluacion=l2.replace(dependencia, "");
+            if(evaluacion.startsWith(",")){
+                evaluacion=evaluacion.substring(1, evaluacion.length());
+            }
+            if(evaluacion.contains(",,")){
+                evaluacion=evaluacion.replace(",,", ",");
+            }
+            if(evaluacion.endsWith(",")){
+                evaluacion=evaluacion.substring(0, evaluacion.length()-1);
+            }
+            String cierre=verificarCierre(dependencia.split("->")[0], evaluacion.split(","));
+    }
+    
 }
