@@ -218,6 +218,7 @@ public class RecubrimientoMinimo {
                 evaluacion=evaluacion.substring(0, evaluacion.length()-1);
             }
             String cierre=verificarCierre(dependencia.split("->")[0], evaluacion.split(","));
+            System.out.println(cierre);
     }
     
 }
