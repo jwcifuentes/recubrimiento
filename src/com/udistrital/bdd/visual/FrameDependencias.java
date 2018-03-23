@@ -365,6 +365,8 @@ public class FrameDependencias extends javax.swing.JFrame {
         String llaveCandidata=RecubrimientoMinimo.hallarLLaveCandidata(atrb, w);
         System.out.println("Llave candidata: "+llaveCandidata);
         textoLlaveCand.setText(llaveCandidata);
+        String _3FN=RecubrimientoMinimo.calcular3FN(atrb, l2.split(","));
+        System.out.println("3FN: "+_3FN);
         }else{
             
         }
