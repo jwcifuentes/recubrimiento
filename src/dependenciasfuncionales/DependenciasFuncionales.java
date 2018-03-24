@@ -92,6 +92,14 @@ public class DependenciasFuncionales {
         }
         return elementos;
     }
+    
+    public static ArrayList<String> obtenerElementosFrom( String data) {
+        ArrayList<String> elementos = new ArrayList<>();
+        for(String elemento:data.split(",")){
+            elementos.add(elemento);
+        }
+        return elementos;
+    }
 
     private static void leerOpciones(ArrayList<String> atributos) {
         for(String dato:atributos){

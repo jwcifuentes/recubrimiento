@@ -21,7 +21,7 @@ public class Proyeccion {
                 ArrayList<String> arreglo = new ArrayList<>();
 		w.addAll(atributos);
                 //De donde sale Atr???
-		w.removeAll(Atr);
+		//w.removeAll(Atr);
 		System.out.println("Conjunto G " + w);
 		for (String a : w) {
 			ArrayList<String> ats = new ArrayList<>();

@@ -7,6 +7,8 @@ package com.udistrital.bdd.visual;
 
 import dependenciasfuncionales.DependenciasFuncionales;
 import dependenciasfuncionales.RecubrimientoMinimo;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -29,6 +31,9 @@ public class FrameDependencias extends javax.swing.JFrame {
      */
     public FrameDependencias() {
         initComponents();
+        if(cargaRealizada){
+            crearDependenciasRelaciones();
+        }
     }
     File fichero;
     /**
@@ -108,8 +113,10 @@ public class FrameDependencias extends javax.swing.JFrame {
                     Map<String, String> mapDatos=DependenciasFuncionales.leertxt(fichero);
                     ArrayList<String> atributos = DependenciasFuncionales.obtenerElementosMap(mapDatos, "T");
                     ArrayList<String> relaciones = DependenciasFuncionales.obtenerElementosMap(mapDatos, "L");
-                    if(validarIntegridad(atributos,relaciones)){
-                        crearDependenciasRelaciones(atributos,relaciones);
+                    atrb=atributos;
+                    relat=relaciones;
+                    if(validarIntegridad()){
+                        crearDependenciasRelaciones();
                         cargaRealizada=true;
                     }
 
@@ -160,8 +167,6 @@ public class FrameDependencias extends javax.swing.JFrame {
                 .addComponent(filename, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-
-        jLabel2.getAccessibleContext().setAccessibleName("DEPENDENCIAS");
 
         panelCabecera.setForeground(new java.awt.Color(255, 255, 255));
         panelCabecera.setLayout(new java.awt.GridLayout(0, 9));
@@ -326,9 +331,15 @@ public class FrameDependencias extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CrearRelacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearRelacionesActionPerformed
-        // TODO add your handling code here:
+        FrmTablero tablero = new FrmTablero();
+        //Se obtienen las dimensiones de la pantalla
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        //Se settea la posición inicial de la ventana en el centro de la pantalla
+        tablero.setLocation(dim.width/2-tablero.getSize().width/2, dim.height/2-tablero.getSize().height/2);
+        //Se muestra el tablero
+        tablero.show();
     }//GEN-LAST:event_CrearRelacionesActionPerformed
-    private boolean cargaRealizada;
+    private static boolean cargaRealizada;
     private void botonRecubrimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRecubrimientoActionPerformed
         if(cargaRealizada){
             ArrayList<String> descomp = RecubrimientoMinimo.descomponer(relat);
@@ -384,6 +395,15 @@ public class FrameDependencias extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
+            if(args!=null && args.length==2){
+                 atrb= DependenciasFuncionales.obtenerElementosFrom(args[0]);
+                 relat = DependenciasFuncionales.obtenerElementosFrom(args[1]);
+                    if(validarIntegridad()){
+//                    crearDependenciasRelaciones();
+                    cargaRealizada=true;
+                
+                }
+            }
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -405,14 +425,15 @@ public class FrameDependencias extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FrameDependencias().setVisible(true);
+                
             }
         });
     }
-    private ArrayList<String> atrb;
-    private ArrayList<String> relat;
-    private void crearDependenciasRelaciones(ArrayList<String> atributos,ArrayList<String> relaciones){
-        atrb=atributos;
-        relat=relaciones;
+    private static ArrayList<String> atrb;
+    private static ArrayList<String> relat;
+    private void crearDependenciasRelaciones(){
+        ArrayList<String> atributos = atrb;
+        ArrayList<String> relaciones = relat;
         ArrayList<JButton> botones = new ArrayList<>();
         int contador = atributos.size()>relaciones.size()?atributos.size():relaciones.size();
         for(int i=0; i<contador;i++){
@@ -430,6 +451,43 @@ public class FrameDependencias extends javax.swing.JFrame {
             if(i<relaciones.size()){
                 final String textoBoton = relaciones.get(i);
                 btnRel.setText(relaciones.get(i));
+                
+                paneAtributos.add(btnRel);
+                System.out.println("rel: "+relaciones.get(i));
+                System.out.println("implicado "+relaciones.get(i).split("->")[1]);
+                System.out.println("implicante "+relaciones.get(i).split("->")[0]);
+                final JButton implicado = new JButton();
+                final JButton implicante = new JButton();
+                final JButton relacion = new JButton();
+                relacion.setText(relaciones.get(i));
+                implicado.setText(relaciones.get(i).split("->")[0]);
+
+                implicante.setText(relaciones.get(i).split("->")[1]);
+
+                javax.swing.JLabel jtxxFld3 = new javax.swing.JLabel();
+                jtxxFld3.setText("");
+                 javax.swing.JLabel jtxxFld1 = new javax.swing.JLabel();
+                jtxxFld1.setText("");
+                 javax.swing.JLabel jtxxFld2 = new javax.swing.JLabel();
+                jtxxFld2.setText("");
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(implicado);
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(relacion);
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(implicante);
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
+                panelCabecera.add(new javax.swing.JLabel());
                 btnRel.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -437,11 +495,18 @@ public class FrameDependencias extends javax.swing.JFrame {
                         String[] options={"ELIMINAR","CANCELAR"};
                         int rt = JOptionPane.showOptionDialog(null, "DESEA ELIMINAR LA RELACION "+textoBoton, "CONFIRMACION", YES_NO_OPTION, HEIGHT, null, options, NORMAL);
                         System.out.println("valor rt "+rt);
-                        paneAtributos.remove(btnRel);
-                        paneAtributos.repaint();
+                        if(rt==0){
+                            relat.remove(btnRel.getText());
+                            paneAtributos.remove(btnRel);
+                            panelCabecera.remove(implicante);
+                            panelCabecera.remove(implicado);
+                            panelCabecera.remove(relacion);
+                            paneAtributos.repaint();
+                            panelCabecera.repaint();
+                        }
+                        
                     }
                 });
-                paneAtributos.add(btnRel);
             }else{
                 jtxxFld = new javax.swing.JLabel();
                 jtxxFld.setText("");
@@ -451,49 +516,51 @@ public class FrameDependencias extends javax.swing.JFrame {
         }
         paneAtributos.updateUI();
         for(String rel:relaciones){
-            System.out.println("rel: "+rel);
-            System.out.println("implicado "+rel.split("->")[1]);
-            System.out.println("implicante "+rel.split("->")[0]);
-            JButton implicado = new JButton();
-            JButton implicante = new JButton();
-            JButton relacion = new JButton();
-            relacion.setText(rel);
-            implicado.setText(rel.split("->")[0]);
-            
-            implicante.setText(rel.split("->")[1]);
-            
-            javax.swing.JLabel jtxxFld = new javax.swing.JLabel();
-            jtxxFld.setText("");
-             javax.swing.JLabel jtxxFld1 = new javax.swing.JLabel();
-            jtxxFld1.setText("");
-             javax.swing.JLabel jtxxFld2 = new javax.swing.JLabel();
-            jtxxFld2.setText("");
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(implicado);
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(relacion);
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(implicante);
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
-            panelCabecera.add(new javax.swing.JLabel());
+//            System.out.println("rel: "+rel);
+//            System.out.println("implicado "+rel.split("->")[1]);
+//            System.out.println("implicante "+rel.split("->")[0]);
+//            JButton implicado = new JButton();
+//            JButton implicante = new JButton();
+//            JButton relacion = new JButton();
+//            relacion.setText(rel);
+//            implicado.setText(rel.split("->")[0]);
+//            
+//            implicante.setText(rel.split("->")[1]);
+//            
+//            javax.swing.JLabel jtxxFld = new javax.swing.JLabel();
+//            jtxxFld.setText("");
+//             javax.swing.JLabel jtxxFld1 = new javax.swing.JLabel();
+//            jtxxFld1.setText("");
+//             javax.swing.JLabel jtxxFld2 = new javax.swing.JLabel();
+//            jtxxFld2.setText("");
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(implicado);
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(relacion);
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(implicante);
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
+//            panelCabecera.add(new javax.swing.JLabel());
         }
         panelCabecera.updateUI();
 //                ,panelRelaciones
         
     }
     
-    private boolean validarIntegridad(ArrayList<String> atributos,ArrayList<String> relaciones){
+    private static boolean validarIntegridad(){
         String linicial="";
+        ArrayList<String> atributos = atrb;
+        ArrayList<String> relaciones = relat;
         for(String atrb:atributos){
             linicial+=atrb+",";
         }
@@ -545,7 +612,7 @@ public class FrameDependencias extends javax.swing.JFrame {
     private javax.swing.JTextField textoLlaveCand;
     // End of variables declaration//GEN-END:variables
 
-    private boolean verificarElemento(String atributos, String elemento) {
+    private static boolean verificarElemento(String atributos, String elemento) {
         
         if(elemento.contains(".")){
             String[] arreglo = elemento.replace(".", ",").split(",");
@@ -562,5 +629,15 @@ public class FrameDependencias extends javax.swing.JFrame {
         }
         return false;
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private void CrearRelacionesActionPerformed(String atributos, String dependencias){
+        ArrayList<String> atrb = DependenciasFuncionales.obtenerElementosFrom(atributos);
+        ArrayList<String> relaciones = DependenciasFuncionales.obtenerElementosFrom(dependencias);
+        
+        if(validarIntegridad()){
+            crearDependenciasRelaciones();
+            cargaRealizada=true;
+        }
     }
 }
