@@ -156,9 +156,6 @@
             <Property name="text" type="java.lang.String" value="DEPENDENCIAS"/>
             <Property name="autoscrolls" type="boolean" value="true"/>
           </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="DEPENDENCIAS"/>
-          </AccessibilityProperties>
         </Component>
         <Component class="javax.swing.JTextField" name="filename">
         </Component>

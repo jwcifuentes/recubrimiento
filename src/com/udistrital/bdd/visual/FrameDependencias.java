@@ -416,7 +416,7 @@ public class FrameDependencias extends javax.swing.JFrame {
         ArrayList<JButton> botones = new ArrayList<>();
         int contador = atributos.size()>relaciones.size()?atributos.size():relaciones.size();
         for(int i=0; i<contador;i++){
-            JButton btnRel = new JButton();
+            final JButton btnRel = new JButton();
             JButton btnAtr = new JButton();
             javax.swing.JLabel jtxxFld = new javax.swing.JLabel();
             if(i<atributos.size()){
@@ -437,6 +437,8 @@ public class FrameDependencias extends javax.swing.JFrame {
                         String[] options={"ELIMINAR","CANCELAR"};
                         int rt = JOptionPane.showOptionDialog(null, "DESEA ELIMINAR LA RELACION "+textoBoton, "CONFIRMACION", YES_NO_OPTION, HEIGHT, null, options, NORMAL);
                         System.out.println("valor rt "+rt);
+                        paneAtributos.remove(btnRel);
+                        paneAtributos.repaint();
                     }
                 });
                 paneAtributos.add(btnRel);
