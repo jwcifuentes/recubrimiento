@@ -6,6 +6,7 @@
 package dependenciasfuncionales;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -166,10 +167,10 @@ public class RecubrimientoMinimo {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public static String eliminarRedundancias(String l1){
+    public static String eliminarRedundancias(String l2){
         
-        for(String dependencia:l1.split(",")){
-            String evaluacion=l1.replace(dependencia, "");
+        for(String dependencia:l2.split(",")){
+            String evaluacion=l2.replace(dependencia, "");
             if(evaluacion.startsWith(",")){
                 evaluacion=evaluacion.substring(1, evaluacion.length());
             }
@@ -182,10 +183,10 @@ public class RecubrimientoMinimo {
             String cierre=verificarCierre(dependencia.split("->")[0], evaluacion.split(","));
             if(cierre.split(":")[1].contains(dependencia.split("->")[1])){
                 System.out.println("la dependencia "+dependencia+" es redundante");
-                l1=evaluacion;
+                l2=evaluacion;
             }
         }
-        return l1;
+        return l2;
     }
     
     public static String hallarLLaveCandidata(ArrayList<String> atributos, String l2){
@@ -205,21 +206,57 @@ public class RecubrimientoMinimo {
         }
     }
     
-    public static String calcular3FN(ArrayList<String> atributos, String l2){
-        for(String dependencia:l2.split(",")){
-            String evaluacion=l2.replace(dependencia, "");
-            if(evaluacion.startsWith(",")){
-                evaluacion=evaluacion.substring(1, evaluacion.length());
-            }
-            if(evaluacion.contains(",,")){
-                evaluacion=evaluacion.replace(",,", ",");
-            }
-            if(evaluacion.endsWith(",")){
-                evaluacion=evaluacion.substring(0, evaluacion.length()-1);
-            }
-            String cierre=verificarCierre(dependencia.split("->")[0], evaluacion.split(","));
-            System.out.println(cierre);
+    public static String calcularBCNF(ArrayList<String> atributos, String[] l2){
+        Map<String,String> mapCierres= new HashMap<String, String>();
+        String cierre ="";
+        for(String dependencia: l2){
+            System.out.println("inicio dependencia "+dependencia);
+            String izq = dependencia.split("->")[0];
+            String dere = dependencia.split("->")[1];
+            System.out.println("izquierda: "+izq);
+            if(izq.contains(".")){
+                String izquierdaFinal="";
+                boolean isRedundante=false;
+                for(int i=0; i<izq.replace(".", ",").split(",").length;i++){
+                    
+//                    System.out.println("valor de izquierda en iteracion "+i+": "+izq);
+                    String atrb=izq.replace(".", ",").split(",")[i];
+                    String prueba=izq.replace(atrb, "");
+                    if(prueba.startsWith(".")){
+                        prueba=prueba.substring(1, prueba.length());
+                    }
+                    if(prueba.endsWith(".")){
+                        prueba=prueba.substring(0, prueba.length()-1);
+                    }
+                    if(prueba.contains("..")){
+                        prueba=prueba.replace("..", ".");
+                    }
+                    if(mapCierres.get(prueba)==null){
+                        cierre =verificarCierre(prueba, l2);
+                        System.out.println("cierre "+cierre);
+                        if(!cierre.replace(":", "").equals("")){
+                            mapCierres.put(prueba, cierre.split(":")[1]);
+                        }
+                    }else{
+                        cierre = mapCierres.get(prueba);
+                    }
+                }
+            }    
         }
+        return cierre;        
+    }
+    
+    public static String[] calcular3FN(ArrayList<String> atributos, String[] l2, String llaveCandidata){
+        String[] relaciones = new String[l2.length];
+        for(int i=0; i<l2.length; i++){
+            relaciones[i] = l2[i].replace("->", ",");
+            System.out.println("Relacion"+i+"= "+relaciones[i]);
+            String llaves = llaveCandidata.replace(",", "");
+            if ((relaciones[i].matches(".*["+llaves+"].*"))==false){
+                relaciones[i]=llaveCandidata.split(",")[0];
+            }
+        }
+        return relaciones;
     }
     
 }
